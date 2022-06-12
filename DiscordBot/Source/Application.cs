@@ -15,7 +15,6 @@ namespace DiscordBot.Source
     {
         private readonly DiscordSocketClient _client;
         private readonly CommandService _commands;
-        private readonly IServiceProvider _services;
         private readonly string _token;
 
         public Application(string token)
@@ -35,9 +34,9 @@ namespace DiscordBot.Source
 
             _client.Log += Logging.Log;
             _commands.Log += Logging.Log;
-            _services = ConfigureServices();
-            _commands.AddModulesAsync(Assembly.GetEntryAssembly(), _services);
-            var commandHandler = new CommandHandler(_client, _commands, _services);
+            var services = ConfigureServices();
+            _commands.AddModulesAsync(Assembly.GetEntryAssembly(), services);
+            var commandHandler = new CommandHandler(_client, _commands, services);
             _client.MessageReceived += commandHandler.HandleCommandAsync;
         }
 
